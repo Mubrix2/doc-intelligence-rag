@@ -34,8 +34,11 @@ def get_client() -> QdrantClient:
 def ensure_collection_exists() -> None:
     """
     Create the Qdrant collection if it does not already exist.
+    Also ensures a payload index exists on 'source' for filtered search.
     Safe to call on every app startup.
     """
+    from qdrant_client.models import PayloadSchemaType
+
     client = get_client()
     existing_names = [c.name for c in client.get_collections().collections]
 
@@ -47,6 +50,15 @@ def ensure_collection_exists() -> None:
         logger.info(f"Created Qdrant collection '{COLLECTION_NAME}'")
     else:
         logger.info(f"Qdrant collection '{COLLECTION_NAME}' already exists — skipping creation")
+
+    # Create payload index on 'source' field so filtered search works.
+    # This is idempotent — safe to call even if the index already exists.
+    client.create_payload_index(
+        collection_name=COLLECTION_NAME,
+        field_name="source",
+        field_schema=PayloadSchemaType.KEYWORD,
+    )
+    logger.info("Payload index on 'source' verified")
 
 
 def upsert_chunks(chunk_vector_pairs: list[tuple], source: str) -> None:
@@ -109,10 +121,6 @@ def search_vectors(
     top_k: int,
     source_filter: str | None = None,
 ) -> list:
-    """
-    Find the top_k most similar vectors to the query vector.
-    Optionally filter to only search within a specific document.
-    """
     client = get_client()
 
     filter_ = None
@@ -121,11 +129,11 @@ def search_vectors(
             must=[FieldCondition(key="source", match=MatchValue(value=source_filter))]
         )
 
-    results = client.search(
+    results = client.query_points(
         collection_name=COLLECTION_NAME,
-        query_vector=query_vector,
+        query=query_vector,
         limit=top_k,
         query_filter=filter_,
         with_payload=True,
     )
-    return results
+    return results.points
