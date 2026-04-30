@@ -20,10 +20,10 @@ def test_upload_pdf_success(mock_ingest):
         "chunks_stored": 12,
         "status": "success",
     }
-    with open("tests/fixtures/sample.pdf", "rb") as f:
+    with open("tests/fixtures/My_Next_Roadmap.pdf", "rb") as f:
         response = client.post(
             "/api/v1/documents/upload",
-            files={"file": ("sample.pdf", f, "application/pdf")},
+            files={"file": ("My_Next_Roadmap.pdf", f, "application/pdf")},
         )
     assert response.status_code == 201
     assert response.json()["chunks_stored"] == 12

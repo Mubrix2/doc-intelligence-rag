@@ -1,38 +1,33 @@
 # app/core/embedder.py
 import logging
-from sentence_transformers import SentenceTransformer
+from fastembed import TextEmbedding
 from app.config import EMBEDDING_MODEL
 from app.core.chunker import TextChunk
 
 logger = logging.getLogger(__name__)
 
-# Lazy singleton — model loads once, reused for every request
-_model: SentenceTransformer | None = None
+_model: TextEmbedding | None = None
 
 
-def get_model() -> SentenceTransformer:
-    """Load the embedding model once and cache it."""
+def get_model() -> TextEmbedding:
+    """Load the FastEmbed model once and cache it."""
     global _model
     if _model is None:
-        logger.info(f"Loading embedding model '{EMBEDDING_MODEL}' — first call only")
-        _model = SentenceTransformer(EMBEDDING_MODEL)
-        logger.info("Embedding model loaded and cached")
+        logger.info(f"Loading FastEmbed model '{EMBEDDING_MODEL}' — first call only")
+        _model = TextEmbedding(model_name="sentence-transformers/all-MiniLM-L6-v2")
+        logger.info("FastEmbed model loaded and cached")
     return _model
 
 
 def embed_texts(texts: list[str]) -> list[list[float]]:
     """
-    Convert a list of strings into a list of embedding vectors.
-    normalize_embeddings=True ensures vectors have unit length (required for cosine similarity).
+    Convert a list of strings into embedding vectors.
+    FastEmbed returns a generator — convert to list immediately.
+    Vectors are already normalized for cosine similarity.
     """
     model = get_model()
-    vectors = model.encode(
-        texts,
-        show_progress_bar=False,
-        normalize_embeddings=True,
-        batch_size=32,
-    )
-    return vectors.tolist()
+    embeddings = list(model.embed(texts))
+    return [embedding.tolist() for embedding in embeddings]
 
 
 def embed_chunks(chunks: list[TextChunk]) -> list[tuple[TextChunk, list[float]]]:
