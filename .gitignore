@@ -1,6 +1,5 @@
 # Environment secrets
 .env
-.env.*
 
 # Qdrant local storage (if testing locally)
 qdrant_storage/
