@@ -90,6 +90,7 @@ For questions requiring information spread across many pages, higher `top_k` val
 
 ## Project Structure
 
+```
 doc-intelligence-rag/
 ├── app/
 │   ├── api/
@@ -122,8 +123,7 @@ doc-intelligence-rag/
 ├── docker-compose.yml           # Local multi-service orchestration
 ├── .env.example                 # Environment variable template
 └── requirements.txt
-
----
+```
 
 ## Running Locally
 
