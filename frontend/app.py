@@ -1,5 +1,8 @@
 # frontend/app.py
 import streamlit as st
+import os
+st.sidebar.caption(f"API: {os.getenv('API_BASE_URL', 'NOT SET')}")
+
 from api_client import (
     ask_question,
     check_health,
