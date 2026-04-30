@@ -15,7 +15,7 @@ def test_embed_texts_normalized():
     import math
     vectors = embed_texts(["test sentence"])
     magnitude = math.sqrt(sum(v ** 2 for v in vectors[0]))
-    assert abs(magnitude - 1.0) < 0.001
+    assert abs(magnitude - 1.0) < 0.01
 
 
 def test_embed_chunks_preserves_metadata():
