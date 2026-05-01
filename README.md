@@ -6,8 +6,8 @@ A production-ready AI system that lets you upload PDF documents and ask question
 
 Built to demonstrate a complete, end-to-end AI engineering pipeline — from document ingestion to vector search to LLM generation — deployed on cloud infrastructure.
 
-**Live Demo:** [your-app.streamlit.app](https://your-app.streamlit.app)  
-**API Docs:** [your-api.onrender.com/docs](https://your-api.onrender.com/docs)
+**Live Demo:** [your-app.streamlit.app](https://doc-intelligence-rag-bcbbpwznmtmgzkivxryjrg.streamlit.app)  
+**API Docs:** [your-api.onrender.com/docs](https://doc-intelligence-rag-1.onrender.com/docs)
 
 ---
 
