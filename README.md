@@ -11,6 +11,12 @@ Built to demonstrate a complete, end-to-end AI engineering pipeline — from doc
 
 ---
 
+## Demo
+
+![Demo](demo.gif)
+
+---
+
 ## What It Does
 
 1. Upload one or more PDF documents through the web interface
